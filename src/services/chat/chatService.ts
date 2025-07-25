@@ -190,7 +190,7 @@ class ChatService {
 
       // Create new session with welcome message
       const welcomeMessage: Message = {
-        id: '1',
+        id: `service-welcome-${Date.now()}`,
         content: `Hello! I've analyzed "${documentName}" and I'm ready to help you understand its content. You can ask me questions, request summaries, or explore specific topics within the document.`,
         isUser: false,
         timestamp: new Date()

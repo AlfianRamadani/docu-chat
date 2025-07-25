@@ -1,0 +1,18 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Simple document with chat bubble -->
+  <rect width="16" height="16" rx="2" fill="#3b82f6"/>
+  
+  <!-- Document -->
+  <path d="M3 2c0-.6.4-1 1-1h6l2 2v8c0 .6-.4 1-1 1H4c-.6 0-1-.4-1-1V2z" fill="white"/>
+  
+  <!-- Document corner -->
+  <path d="M9 1v2h2" fill="none" stroke="#3b82f6" stroke-width="0.5"/>
+  
+  <!-- Chat bubble -->
+  <circle cx="11" cy="10" r="3" fill="#10b981"/>
+  
+  <!-- Chat dots -->
+  <circle cx="10" cy="9.5" r="0.3" fill="white"/>
+  <circle cx="11" cy="9.5" r="0.3" fill="white"/>
+  <circle cx="12" cy="9.5" r="0.3" fill="white"/>
+</svg>

@@ -59,7 +59,7 @@ class MongoDB {
     return this.db;
   }
 
-  public getCollection<T = Document>(name: string): Collection<T> {
+  public getCollection<T extends Document = Document>(name: string): Collection<T> {
     return this.getDatabase().collection<T>(name);
   }
 

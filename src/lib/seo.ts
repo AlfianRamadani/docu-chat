@@ -19,23 +19,7 @@ export interface SEOConfig {
 export const defaultSEO: SEOConfig = {
   title: 'DocuChat - AI-Powered Document Chat Assistant',
   description: 'Upload PDFs, Word documents, or text files and get instant answers, summaries, and insights through natural conversation with our advanced AI-powered document chat assistant.',
-  keywords: [
-    'document chat',
-    'AI document analysis',
-    'PDF chat',
-    'document AI',
-    'text analysis',
-    'document questions',
-    'AI assistant',
-    'document summarization',
-    'intelligent document processing',
-    'conversational AI',
-    'document insights',
-    'file analysis',
-    'AI-powered chat',
-    'document understanding',
-    'smart document reader'
-  ],
+  keywords: ['document chat', 'AI document analysis', 'PDF chat', 'document AI', 'text analysis', 'document questions', 'AI assistant', 'document summarization', 'intelligent document processing', 'conversational AI', 'document insights', 'file analysis', 'AI-powered chat', 'document understanding', 'smart document reader'],
   image: '/og-image.png',
   type: 'website',
   author: 'DocuChat Team'
@@ -43,32 +27,32 @@ export const defaultSEO: SEOConfig = {
 
 export function generateMetadata(config: Partial<SEOConfig> = {}): Metadata {
   const seo = { ...defaultSEO, ...config };
-  const fullTitle = config.title 
-    ? `${config.title} | DocuChat` 
-    : seo.title;
+  const fullTitle = config.title ? `${config.title} | DocuChat` : seo.title;
 
   return {
     title: fullTitle,
     description: seo.description,
     keywords: seo.keywords?.join(', '),
     authors: seo.author ? [{ name: seo.author }] : undefined,
-    
+
     // Open Graph
     openGraph: {
       title: fullTitle,
       description: seo.description,
       type: seo.type || 'website',
       url: seo.url,
-      images: seo.image ? [
-        {
-          url: seo.image,
-          width: 1200,
-          height: 630,
-          alt: fullTitle,
-        }
-      ] : undefined,
+      images: seo.image
+        ? [
+            {
+              url: seo.image,
+              width: 1200,
+              height: 630,
+              alt: fullTitle
+            }
+          ]
+        : undefined,
       siteName: 'DocuChat',
-      locale: 'en_US',
+      locale: 'en_US'
     },
 
     // Twitter Card
@@ -78,7 +62,7 @@ export function generateMetadata(config: Partial<SEOConfig> = {}): Metadata {
       description: seo.description,
       images: seo.image ? [seo.image] : undefined,
       creator: '@docuchat',
-      site: '@docuchat',
+      site: '@docuchat'
     },
 
     // Additional metadata
@@ -90,15 +74,15 @@ export function generateMetadata(config: Partial<SEOConfig> = {}): Metadata {
         follow: !seo.noFollow,
         'max-video-preview': -1,
         'max-image-preview': 'large',
-        'max-snippet': -1,
-      },
+        'max-snippet': -1
+      }
     },
 
     // Verification and other meta tags
     verification: {
       google: 'your-google-verification-code',
       yandex: 'your-yandex-verification-code',
-      yahoo: 'your-yahoo-verification-code',
+      yahoo: 'your-yahoo-verification-code'
     },
 
     // Additional meta tags
@@ -108,39 +92,33 @@ export function generateMetadata(config: Partial<SEOConfig> = {}): Metadata {
       'mobile-web-app-capable': 'yes',
       'apple-mobile-web-app-capable': 'yes',
       'apple-mobile-web-app-status-bar-style': 'default',
-      'format-detection': 'telephone=no',
+      'format-detection': 'telephone=no'
     },
 
     // Canonical URL
     alternates: {
-      canonical: seo.url,
+      canonical: seo.url
     },
 
     // App-specific metadata
     applicationName: 'DocuChat',
     generator: 'Next.js',
     referrer: 'origin-when-cross-origin',
-    
+
     // Icons
     icons: {
-      icon: [
-        { url: '/favicon.ico', sizes: 'any' },
-        { url: '/icon-16x16.png', sizes: '16x16', type: 'image/png' },
-        { url: '/icon-32x32.png', sizes: '32x32', type: 'image/png' },
-      ],
-      apple: [
-        { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
-      ],
+      icon: [{ url: '/favicon.svg', sizes: 'any' }],
+      apple: [{ url: '/apple-touch-icon.svg', sizes: '180x180', type: 'image/png' }]
     },
 
     // Manifest
-    manifest: '/manifest.json',
+    manifest: '/manifest.json'
   };
 }
 
 export function generateStructuredData(config: Partial<SEOConfig> = {}) {
   const seo = { ...defaultSEO, ...config };
-  
+
   return {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
@@ -159,14 +137,7 @@ export function generateStructuredData(config: Partial<SEOConfig> = {}) {
       name: 'DocuChat Team',
       url: 'https://docuchat.com'
     },
-    featureList: [
-      'AI-powered document analysis',
-      'Natural language document queries',
-      'PDF, DOCX, and TXT file support',
-      'Instant document summaries',
-      'Conversational AI interface',
-      'Advanced text understanding'
-    ],
+    featureList: ['AI-powered document analysis', 'Natural language document queries', 'PDF, DOCX, and TXT file support', 'Instant document summaries', 'Conversational AI interface', 'Advanced text understanding'],
     screenshot: seo.image,
     aggregateRating: {
       '@type': 'AggregateRating',
@@ -182,32 +153,32 @@ export const pageMetadata = {
   home: {
     title: 'AI-Powered Document Chat Assistant',
     description: 'Upload PDFs, Word documents, or text files and get instant answers, summaries, and insights through natural conversation with our advanced AI-powered document chat assistant.',
-    keywords: [...defaultSEO.keywords!, 'home', 'landing page', 'document upload'],
+    keywords: [...defaultSEO.keywords!, 'home', 'landing page', 'document upload']
   },
   upload: {
     title: 'Upload Your Document',
     description: 'Upload PDF, Word, or text files to start chatting with your documents using our AI-powered assistant. Get instant answers and insights from your content.',
-    keywords: [...defaultSEO.keywords!, 'upload', 'file upload', 'document upload'],
+    keywords: [...defaultSEO.keywords!, 'upload', 'file upload', 'document upload']
   },
   chat: {
     title: 'Chat with Your Document',
     description: 'Ask questions about your uploaded document and get instant AI-powered answers, summaries, and insights through natural conversation.',
-    keywords: [...defaultSEO.keywords!, 'chat', 'conversation', 'document questions'],
+    keywords: [...defaultSEO.keywords!, 'chat', 'conversation', 'document questions']
   },
   privacy: {
     title: 'Privacy Policy',
     description: 'Learn how DocuChat protects your privacy and handles your document data with our comprehensive privacy policy.',
-    keywords: ['privacy policy', 'data protection', 'privacy', 'security'],
+    keywords: ['privacy policy', 'data protection', 'privacy', 'security']
   },
   terms: {
     title: 'Terms of Service',
-    description: 'Read DocuChat\'s terms of service to understand the rules and guidelines for using our AI-powered document chat platform.',
-    keywords: ['terms of service', 'terms and conditions', 'legal', 'usage policy'],
+    description: "Read DocuChat's terms of service to understand the rules and guidelines for using our AI-powered document chat platform.",
+    keywords: ['terms of service', 'terms and conditions', 'legal', 'usage policy']
   },
   notFound: {
     title: 'Page Not Found',
-    description: 'The page you\'re looking for doesn\'t exist. Return to DocuChat to continue chatting with your documents.',
+    description: "The page you're looking for doesn't exist. Return to DocuChat to continue chatting with your documents.",
     keywords: ['404', 'not found', 'error'],
-    noIndex: true,
-  },
+    noIndex: true
+  }
 };

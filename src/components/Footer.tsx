@@ -1,5 +1,5 @@
 'use client';
-import { useTheme } from '@/hooks/useTheme';
+import { useTheme } from '@/context/ThemeContext';
 import { Button } from '@/components/ui/button';
 import { Moon, Sun } from 'lucide-react';
 import Link from 'next/link';

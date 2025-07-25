@@ -1,5 +1,5 @@
-import AzureStorage from './azure/storage';
-import AzureSearch from './azure/search';
+import azureStorageService from './azure/storage';
+import azureSearchService from './azure/search';
 import azureOpenAIService from './azure/openai';
 import chatService from './chat/chatService';
 import { Message } from '../types/chat';
@@ -39,27 +39,22 @@ class DocumentProcessingService {
   /**
    * Complete document processing pipeline
    */
-  public async processDocument(
-    file: File, 
-    sessionId: string
-  ): Promise<DocumentProcessingResult> {
+  public async processDocument(file: File, sessionId: string): Promise<DocumentProcessingResult> {
     try {
       console.log(`Starting document processing for: ${file.name}`);
-      
+
       // Step 1: Upload to Azure Blob Storage
-      const { uploadBlob } = await AzureStorage();
-      const uploadResult = await uploadBlob(file, sessionId);
-      
+      const uploadResult = await azureStorageService.uploadBlob(file, sessionId);
+
       if (!uploadResult || uploadResult instanceof Error) {
-        throw new Error('Failed to upload document to Azure Storage');
+        throw new Error('Failed to upload document to Storage');
       }
 
-      console.log('Document uploaded to Azure Storage');
+      console.log('Document uploaded to Storage');
 
       // Step 2: Trigger Azure Search indexing
-      const { runIndexes } = await AzureSearch();
-      await runIndexes();
-      
+      await azureSearchService.runIndexer();
+
       console.log('Azure Search indexing triggered');
 
       // Step 3: Wait for indexing to complete (simplified - in production, use webhooks)
@@ -93,7 +88,6 @@ class DocumentProcessingService {
         summary,
         topics
       };
-
     } catch (error) {
       console.error('Document processing error:', error);
       return {
@@ -108,28 +102,30 @@ class DocumentProcessingService {
   /**
    * Search for relevant document content based on user query
    */
-  public async searchDocumentContent(
-    sessionId: string,
-    query: string,
-    topK: number = 5
-  ): Promise<DocumentSearchResult[]> {
+  public async searchDocumentContent(sessionId: string, query: string, topK: number = 5): Promise<DocumentSearchResult[]> {
     try {
-      const { getDocuments } = await AzureSearch();
-      const searchResults = await getDocuments(sessionId);
-      
+      const searchResults = await azureSearchService.getDocumentsBySession(sessionId);
+
       if (!searchResults) {
         return [];
       }
 
       const results: DocumentSearchResult[] = [];
-      
+
       // Process search results
-      for await (const result of searchResults.results) {
+      for (const result of searchResults) {
         if (result.document) {
+          const fileName = result.document.metadata_storage_name || 'Unknown';
+          
+          // Skip results with unknown file names
+          if (fileName === 'Unknown') {
+            continue;
+          }
+          
           results.push({
             content: result.document.content || '',
             metadata: {
-              fileName: result.document.metadata_storage_name || 'Unknown',
+              fileName: fileName,
               sessionId: result.document.sessionId || sessionId,
               pageNumber: result.document.pageNumber,
               section: result.document.section
@@ -140,10 +136,7 @@ class DocumentProcessingService {
       }
 
       // Sort by relevance score and return top K
-      return results
-        .sort((a, b) => b.score - a.score)
-        .slice(0, topK);
-
+      return results.sort((a, b) => b.score - a.score).slice(0, topK);
     } catch (error) {
       console.error('Document search error:', error);
       return [];
@@ -165,43 +158,38 @@ class DocumentProcessingService {
     try {
       // Step 1: Search for relevant document content
       const documentSources = await this.searchDocumentContent(sessionId, userMessage);
-      
+
       // Step 2: Extract content for AI context
-      const documentContext = documentSources.map(source => 
-        `Source: ${source.metadata.fileName}\nContent: ${source.content}`
-      );
+      const documentContext = documentSources.map(source => `Source: ${source.metadata.fileName}\nContent: ${source.content}`);
 
       // Step 3: Convert conversation history to AI format
       const aiHistory = conversationHistory
         .filter(msg => msg.content.trim().length > 0)
         .map(msg => ({
-          role: msg.isUser ? 'user' as const : 'assistant' as const,
+          role: msg.isUser ? ('user' as const) : ('assistant' as const),
           content: msg.content
         }));
 
       // Step 4: Generate AI response with context
-      const aiResponse = await azureOpenAIService.generateResponse(
-        userMessage,
-        documentContext,
-        aiHistory
-      );
+      const aiResponse = await azureOpenAIService.generateResponse(userMessage, documentContext, aiHistory);
 
       // Step 5: Generate citations
-      const citations = documentSources.map(source => {
-        const fileName = source.metadata.fileName;
-        const pageRef = source.metadata.pageNumber ? ` (Page ${source.metadata.pageNumber})` : '';
-        return `${fileName}${pageRef}`;
-      });
+      const citations = documentSources
+        .filter(source => source.metadata.fileName && source.metadata.fileName !== 'Unknown')
+        .map(source => {
+          const fileName = source.metadata.fileName;
+          const pageRef = source.metadata.pageNumber ? ` (Page ${source.metadata.pageNumber})` : '';
+          return `${fileName}${pageRef}`;
+        });
 
       return {
         response: aiResponse,
         citations: [...new Set(citations)], // Remove duplicates
         sources: documentSources
       };
-
     } catch (error) {
       console.error('Contextual response generation error:', error);
-      
+
       // Fallback response
       return {
         response: "I apologize, but I'm having trouble accessing the document content right now. Please try again or ask a different question.",
@@ -217,13 +205,11 @@ class DocumentProcessingService {
   public async getDocumentSummary(sessionId: string): Promise<string | null> {
     try {
       const session = await chatService.restoreChatSession(sessionId);
-      
+
       if (session.success && session.session?.messages) {
         // Look for system messages containing document summary
-        const summaryMessage = session.session.messages.find(
-          msg => !msg.isUser && msg.content.includes('Document Summary:')
-        );
-        
+        const summaryMessage = session.session.messages.find(msg => !msg.isUser && msg.content.includes('Document Summary:'));
+
         if (summaryMessage) {
           return summaryMessage.content;
         }
@@ -268,7 +254,7 @@ class DocumentProcessingService {
   private async extractDocumentContent(sessionId: string, fileName: string): Promise<string | null> {
     try {
       const results = await this.searchDocumentContent(sessionId, fileName, 10);
-      
+
       if (results.length === 0) {
         return null;
       }
@@ -284,12 +270,7 @@ class DocumentProcessingService {
   /**
    * Update chat session with document processing results
    */
-  private async updateChatSessionWithDocument(
-    sessionId: string,
-    documentName: string,
-    summary?: string,
-    topics?: string[]
-  ): Promise<void> {
+  private async updateChatSessionWithDocument(sessionId: string, documentName: string, summary?: string, topics?: string[]): Promise<void> {
     try {
       if (summary) {
         const summaryMessage: Message = {

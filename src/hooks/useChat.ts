@@ -41,6 +41,12 @@ export const useChat = (): UseChatReturn => {
 
       const data = await response.json();
       
+      // Don't treat "Chat session not found" as an error - it's expected for new sessions
+      if (!data.success && data.error && data.error.includes('Chat session not found')) {
+        console.log('No existing session found - this is expected for new sessions');
+        return { success: false, session: null };
+      }
+      
       if (!data.success) {
         throw new Error(data.error || 'Operation failed');
       }
@@ -78,8 +84,15 @@ export const useChat = (): UseChatReturn => {
     try {
       const result: RestoreChatResponse = await apiCall(`/api/chat?sessionId=${encodeURIComponent(sessionId)}`);
       
-      return result.session || null;
+      // Handle the case where no session is found (normal for new sessions)
+      if (!result.success || !result.session) {
+        console.log('No existing session found, will create new one');
+        return null;
+      }
+      
+      return result.session;
     } catch (error) {
+      // This should rarely happen now since we handle "not found" in apiCall
       console.error('Error restoring chat:', error);
       return null;
     }

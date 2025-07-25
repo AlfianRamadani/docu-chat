@@ -37,6 +37,22 @@ const ChatInterface = ({ documentName, sessionId }: ChatInterfaceProps) => {
     scrollToBottom();
   }, [messages]);
 
+  // Function to ensure unique message IDs
+  const ensureUniqueMessageIds = (messages: Message[]): Message[] => {
+    const seenIds = new Set<string>();
+    return messages.map(message => {
+      if (seenIds.has(message.id)) {
+        // Generate a new unique ID for duplicate messages
+        const newId = `restored-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        seenIds.add(newId);
+        return { ...message, id: newId };
+      } else {
+        seenIds.add(message.id);
+        return message;
+      }
+    });
+  };
+
   // Initialize or restore chat session on component mount
   useEffect(() => {
     const initializeChat = async () => {
@@ -48,16 +64,16 @@ const ChatInterface = ({ documentName, sessionId }: ChatInterfaceProps) => {
         const restoredSession = await restoreChat(sessionId);
         
         if (restoredSession && restoredSession.messages.length > 0) {
-          setMessages(restoredSession.messages);
+          setMessages(ensureUniqueMessageIds(restoredSession.messages));
         } else {
           // Initialize new session if no existing session found
           const newSession = await initializeSession(sessionId, documentName);
           if (newSession && newSession.messages.length > 0) {
-            setMessages(newSession.messages);
+            setMessages(ensureUniqueMessageIds(newSession.messages));
           } else {
             // Fallback to default welcome message
             const welcomeMessage: Message = {
-              id: '1',
+              id: `welcome-${Date.now()}`,
               content: `Hello! I've analyzed "${documentName}" and I'm ready to help you understand its content. You can ask me questions, request summaries, or explore specific topics within the document.`,
               isUser: false,
               timestamp: new Date()
@@ -69,7 +85,7 @@ const ChatInterface = ({ documentName, sessionId }: ChatInterfaceProps) => {
         console.error('Error initializing chat:', error);
         // Fallback to default welcome message
         const welcomeMessage: Message = {
-          id: '1',
+          id: `welcome-fallback-${Date.now()}`,
           content: `Hello! I've analyzed "${documentName}" and I'm ready to help you understand its content. You can ask me questions, request summaries, or explore specific topics within the document.`,
           isUser: false,
           timestamp: new Date()
@@ -91,7 +107,7 @@ const ChatInterface = ({ documentName, sessionId }: ChatInterfaceProps) => {
     try {
       const restoredSession = await restoreChat(sessionId);
       if (restoredSession && restoredSession.messages.length > 0) {
-        setMessages(restoredSession.messages);
+        setMessages(ensureUniqueMessageIds(restoredSession.messages));
       }
     } catch (error) {
       console.error('Error restoring chat:', error);
@@ -119,7 +135,7 @@ const ChatInterface = ({ documentName, sessionId }: ChatInterfaceProps) => {
       }
 
       const newMessage: Message = {
-        id: Date.now().toString(),
+        id: `ai-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         content: result.response,
         isUser: false,
         timestamp: new Date(),
@@ -142,7 +158,7 @@ const ChatInterface = ({ documentName, sessionId }: ChatInterfaceProps) => {
       
       // Fallback to simple response
       const fallbackMessage: Message = {
-        id: Date.now().toString(),
+        id: `fallback-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         content: "I apologize, but I'm having trouble accessing the document content right now. Please try again or ask a different question.",
         isUser: false,
         timestamp: new Date()
@@ -166,7 +182,7 @@ const ChatInterface = ({ documentName, sessionId }: ChatInterfaceProps) => {
     if (!inputMessage.trim() || !sessionId) return;
 
     const userMessage: Message = {
-      id: Date.now().toString(),
+      id: `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       content: inputMessage,
       isUser: true,
       timestamp: new Date(),

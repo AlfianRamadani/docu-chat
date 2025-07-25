@@ -1,0 +1,29 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with rounded corners -->
+  <rect width="180" height="180" rx="36" fill="#3b82f6"/>
+  
+  <!-- Document icon -->
+  <path d="M45 35c0-5.5 4.5-10 10-10h40l20 20v75c0 5.5-4.5 10-10 10H55c-5.5 0-10-4.5-10-10V35z" fill="white"/>
+  
+  <!-- Document corner fold -->
+  <path d="M95 25v20h20" fill="none" stroke="#3b82f6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Document lines -->
+  <line x1="60" y1="65" x2="90" y2="65" stroke="#64748b" stroke-width="4" stroke-linecap="round"/>
+  <line x1="60" y1="80" x2="100" y2="80" stroke="#64748b" stroke-width="4" stroke-linecap="round"/>
+  <line x1="60" y1="95" x2="80" y2="95" stroke="#64748b" stroke-width="4" stroke-linecap="round"/>
+  
+  <!-- Chat bubble -->
+  <circle cx="125" cy="115" r="25" fill="#10b981"/>
+  
+  <!-- Chat bubble tail -->
+  <path d="M105 135l-10 10v-10h10z" fill="#10b981"/>
+  
+  <!-- Chat dots -->
+  <circle cx="115" cy="110" r="3" fill="white"/>
+  <circle cx="125" cy="110" r="3" fill="white"/>
+  <circle cx="135" cy="110" r="3" fill="white"/>
+  
+  <!-- Brand text -->
+  <text x="90" y="165" text-anchor="middle" fill="white" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="600">DocuChat</text>
+</svg>

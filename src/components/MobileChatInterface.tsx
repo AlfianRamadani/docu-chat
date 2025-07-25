@@ -9,6 +9,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useChat } from '@/hooks/useChat';
 import { Message } from '@/types/chat';
 import MarkdownRenderer from '@/components/MarkdownRenderer';
+import ThemeToggle from '@/components/ThemeToggle';
 
 interface MobileChatInterfaceProps {
   documentName: string;
@@ -22,6 +23,7 @@ const MobileChatInterface = ({ documentName, sessionId }: MobileChatInterfacePro
   const [isTyping, setIsTyping] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -35,27 +37,51 @@ const MobileChatInterface = ({ documentName, sessionId }: MobileChatInterfacePro
     scrollToBottom();
   }, [messages]);
 
+  // Function to ensure unique message IDs
+  const ensureUniqueMessageIds = (messages: Message[]): Message[] => {
+    const seenIds = new Set<string>();
+    return messages.map(message => {
+      if (seenIds.has(message.id)) {
+        // Generate a new unique ID for duplicate messages
+        const newId = `restored-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        seenIds.add(newId);
+        return { ...message, id: newId };
+      } else {
+        seenIds.add(message.id);
+        return message;
+      }
+    });
+  };
+
   // Initialize or restore chat session on component mount
   useEffect(() => {
     const initializeChat = async () => {
       if (!sessionId) return;
 
+      setIsInitializing(true);
       setIsRestoring(true);
       try {
         // Try to restore existing session first
         const restoredSession = await restoreChat(sessionId);
 
         if (restoredSession && restoredSession.messages.length > 0) {
-          setMessages(restoredSession.messages);
+          setMessages(ensureUniqueMessageIds(restoredSession.messages));
+          // Add a small delay to show AI is ready
+          setTimeout(() => {
+            setIsTyping(true);
+            setTimeout(() => {
+              setIsTyping(false);
+            }, 1000);
+          }, 500);
         } else {
           // Initialize new session if no existing session found
           const newSession = await initializeSession(sessionId, documentName);
           if (newSession && newSession.messages.length > 0) {
-            setMessages(newSession.messages);
+            setMessages(ensureUniqueMessageIds(newSession.messages));
           } else {
             // Fallback to default welcome message
             const welcomeMessage: Message = {
-              id: '1',
+              id: `mobile-welcome-${Date.now()}`,
               content: `Hello! I've analyzed "${documentName}" and I'm ready to help you understand its content. You can ask me questions, request summaries, or explore specific topics within the document.`,
               isUser: false,
               timestamp: new Date()
@@ -67,7 +93,7 @@ const MobileChatInterface = ({ documentName, sessionId }: MobileChatInterfacePro
         console.error('Error initializing chat:', error);
         // Fallback to default welcome message
         const welcomeMessage: Message = {
-          id: '1',
+          id: `mobile-welcome-fallback-${Date.now()}`,
           content: `Hello! I've analyzed "${documentName}" and I'm ready to help you understand its content. You can ask me questions, request summaries, or explore specific topics within the document.`,
           isUser: false,
           timestamp: new Date()
@@ -75,6 +101,7 @@ const MobileChatInterface = ({ documentName, sessionId }: MobileChatInterfacePro
         setMessages([welcomeMessage]);
       } finally {
         setIsRestoring(false);
+        setIsInitializing(false);
       }
     };
 
@@ -89,7 +116,7 @@ const MobileChatInterface = ({ documentName, sessionId }: MobileChatInterfacePro
     try {
       const restoredSession = await restoreChat(sessionId);
       if (restoredSession && restoredSession.messages.length > 0) {
-        setMessages(restoredSession.messages);
+        setMessages(ensureUniqueMessageIds(restoredSession.messages));
       }
     } catch (error) {
       console.error('Error restoring chat:', error);
@@ -117,7 +144,7 @@ const MobileChatInterface = ({ documentName, sessionId }: MobileChatInterfacePro
       }
 
       const newMessage: Message = {
-        id: Date.now().toString(),
+        id: `ai-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         content: result.response,
         isUser: false,
         timestamp: new Date(),
@@ -139,7 +166,7 @@ const MobileChatInterface = ({ documentName, sessionId }: MobileChatInterfacePro
 
       // Fallback to simple response
       const fallbackMessage: Message = {
-        id: Date.now().toString(),
+        id: `fallback-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         content: "I apologize, but I'm having trouble accessing the document content right now. Please try again or ask a different question.",
         isUser: false,
         timestamp: new Date()
@@ -163,7 +190,7 @@ const MobileChatInterface = ({ documentName, sessionId }: MobileChatInterfacePro
     if (!inputMessage.trim() || !sessionId) return;
 
     const userMessage: Message = {
-      id: Date.now().toString(),
+      id: `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       content: inputMessage,
       isUser: true,
       timestamp: new Date()
@@ -236,6 +263,21 @@ const MobileChatInterface = ({ documentName, sessionId }: MobileChatInterfacePro
 
   return (
     <div className="flex h-screen bg-background">
+      {/* Loading Screen */}
+      {isInitializing && (
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="text-center space-y-4">
+            <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
+            <div className="space-y-2">
+              <h3 className="text-lg font-semibold">Initializing Chat...</h3>
+              <p className="text-sm text-muted-foreground">
+                {isRestoring ? 'Restoring your conversation...' : 'Setting up your document chat...'}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Desktop Sidebar */}
       <Card className="hidden md:flex w-80 flex-shrink-0 rounded-none border-r border-l-0 border-t-0 border-b-0 flex-col">
         <SidebarContent />
@@ -262,10 +304,33 @@ const MobileChatInterface = ({ documentName, sessionId }: MobileChatInterfacePro
               <File className="w-5 h-5 text-primary" />
               <div>
                 <h1 className="font-semibold truncate">{documentName}</h1>
-                <p className="text-sm text-muted-foreground">{isRestoring ? 'Restoring chat...' : 'Ready to chat'}</p>
+                <div className="text-sm text-muted-foreground">
+                  {isInitializing ? (
+                    <span className="flex items-center gap-1">
+                      <span className="w-2 h-2 bg-primary rounded-full animate-pulse block"></span>
+                      Initializing...
+                    </span>
+                  ) : isRestoring ? (
+                    <span className="flex items-center gap-1">
+                      <span className="w-2 h-2 bg-amber-500 rounded-full animate-pulse block"></span>
+                      Restoring chat...
+                    </span>
+                  ) : isTyping ? (
+                    <span className="flex items-center gap-1">
+                      <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse block"></span>
+                      AI is thinking...
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-1">
+                      <span className="w-2 h-2 bg-green-500 rounded-full block"></span>
+                      Ready to chat
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
             <div className="flex items-center gap-2">
+              <ThemeToggle />
               <Button variant="ghost" size="sm" onClick={handleRestoreChat} disabled={isRestoring || !sessionId} title="Restore chat from database">
                 <RefreshCw className={`w-4 h-4 ${isRestoring ? 'animate-spin' : ''}`} />
               </Button>
@@ -307,7 +372,7 @@ const MobileChatInterface = ({ documentName, sessionId }: MobileChatInterfacePro
                       <p className="text-xs text-muted-foreground mb-1">Sources:</p>
                       <div className="flex flex-wrap gap-1">
                         {message.citations.map((citation, index) => (
-                          <span key={index} className="inline-block px-2 py-1 bg-muted/50 text-xs rounded">
+                          <span key={`${message.id}-citation-${index}`} className="inline-block px-2 py-1 bg-muted/50 text-xs rounded">
                             {citation}
                           </span>
                         ))}
@@ -335,13 +400,18 @@ const MobileChatInterface = ({ documentName, sessionId }: MobileChatInterfacePro
                   <Bot className="w-4 h-4 text-primary" />
                 </div>
                 <div className="bg-chat-ai text-chat-ai-foreground max-w-[85%] md:max-w-[70%] rounded-2xl px-4 py-3">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
                     <div className="flex gap-1">
-                      <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                      <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                      <div className="w-2 h-2 bg-primary/60 rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-primary/60 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                      <div className="w-2 h-2 bg-primary/60 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                     </div>
-                    <span className="text-xs text-muted-foreground">AI is typing...</span>
+                    <span className="text-xs text-muted-foreground">AI is thinking...</span>
+                    <div className="flex gap-1 ml-2">
+                      <div className="w-1 h-1 bg-primary/40 rounded-full animate-pulse"></div>
+                      <div className="w-1 h-1 bg-primary/40 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }}></div>
+                      <div className="w-1 h-1 bg-primary/40 rounded-full animate-pulse" style={{ animationDelay: '0.6s' }}></div>
+                    </div>
                   </div>
                 </div>
               </div>

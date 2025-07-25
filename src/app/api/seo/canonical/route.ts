@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
         },
       }
     );
-  } catch (error) {
+  } catch {
     return new Response('Invalid URL', { status: 400 });
   }
 }

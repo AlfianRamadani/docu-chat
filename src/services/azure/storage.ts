@@ -25,7 +25,7 @@ class AzureStorageService {
     };
 
     if (!this.config.connectionString || !this.config.containerName) {
-      throw new Error('Azure Storage configuration is missing. Please check environment variables.');
+      throw new Error('Storage configuration is missing. Please check environment variables.');
     }
 
     this.blobServiceClient = BlobServiceClient.fromConnectionString(this.config.connectionString);
@@ -47,7 +47,7 @@ class AzureStorageService {
       await this.blobServiceClient.getAccountInfo();
       return { success: true };
     } catch (error) {
-      console.error('Azure Storage connection test failed:', error);
+      console.error('Storage connection test failed:', error);
       return { 
         success: false, 
         error: error instanceof Error ? error.message : 'Unknown connection error' 

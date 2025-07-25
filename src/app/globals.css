@@ -64,63 +64,115 @@
     --gradient-subtle: linear-gradient(180deg, oklch(100% 0 0), oklch(98% 0 0));
 }
 
-@variant dark {
-    @theme {
-        /* Dark theme - Apple-inspired */
-        --color-background: oklch(8% 0 0);
-        --color-foreground: oklch(98% 0 0);
+/* Dark theme styles */
+.dark {
+    --color-background: oklch(8% 0 0);
+    --color-foreground: oklch(98% 0 0);
 
-        --color-card: oklch(10% 0 0);
-        --color-card-foreground: oklch(98% 0 0);
+    --color-card: oklch(10% 0 0);
+    --color-card-foreground: oklch(98% 0 0);
 
-        --color-popover: oklch(10% 0 0);
-        --color-popover-foreground: oklch(98% 0 0);
+    --color-popover: oklch(10% 0 0);
+    --color-popover-foreground: oklch(98% 0 0);
 
-        --color-primary: oklch(50% 0.2 211);
-        --color-primary-foreground: oklch(100% 0 0);
-        --color-primary-glow: oklch(60% 0.2 211);
+    --color-primary: oklch(50% 0.2 211);
+    --color-primary-foreground: oklch(100% 0 0);
+    --color-primary-glow: oklch(60% 0.2 211);
 
-        --color-secondary: oklch(15% 0 0);
-        --color-secondary-foreground: oklch(90% 0 0);
+    --color-secondary: oklch(15% 0 0);
+    --color-secondary-foreground: oklch(90% 0 0);
 
-        --color-muted: oklch(15% 0 0);
-        --color-muted-foreground: oklch(60% 0 0);
+    --color-muted: oklch(15% 0 0);
+    --color-muted-foreground: oklch(60% 0 0);
 
-        --color-accent: oklch(15% 0 0);
-        --color-accent-foreground: oklch(90% 0 0);
+    --color-accent: oklch(15% 0 0);
+    --color-accent-foreground: oklch(90% 0 0);
 
-        --color-destructive: oklch(60% 0.15 0);
-        --color-destructive-foreground: oklch(98% 0 0);
+    --color-destructive: oklch(60% 0.15 0);
+    --color-destructive-foreground: oklch(98% 0 0);
 
-        --color-border: oklch(20% 0 0);
-        --color-input: oklch(15% 0 0);
-        --color-ring: oklch(50% 0.2 211);
+    --color-border: oklch(20% 0 0);
+    --color-input: oklch(15% 0 0);
+    --color-ring: oklch(50% 0.2 211);
 
-        /* Dark theme chat colors */
-        --color-chat-user: oklch(50% 0.2 211);
-        --color-chat-user-foreground: oklch(100% 0 0);
-        --color-chat-ai: oklch(15% 0 0);
-        --color-chat-ai-foreground: oklch(90% 0 0);
+    /* Dark theme chat colors */
+    --color-chat-user: oklch(50% 0.2 211);
+    --color-chat-user-foreground: oklch(100% 0 0);
+    --color-chat-ai: oklch(15% 0 0);
+    --color-chat-ai-foreground: oklch(90% 0 0);
 
-        --color-sidebar-background: oklch(8% 0 0);
-        --color-sidebar-foreground: oklch(90% 0 0);
-        --color-sidebar-primary: oklch(50% 0.2 211);
-        --color-sidebar-primary-foreground: oklch(100% 0 0);
-        --color-sidebar-accent: oklch(15% 0 0);
-        --color-sidebar-accent-foreground: oklch(90% 0 0);
-        --color-sidebar-border: oklch(20% 0 0);
-        --color-sidebar-ring: oklch(50% 0.2 211);
+    --color-sidebar-background: oklch(8% 0 0);
+    --color-sidebar-foreground: oklch(90% 0 0);
+    --color-sidebar-primary: oklch(50% 0.2 211);
+    --color-sidebar-primary-foreground: oklch(100% 0 0);
+    --color-sidebar-accent: oklch(15% 0 0);
+    --color-sidebar-accent-foreground: oklch(90% 0 0);
+    --color-sidebar-border: oklch(20% 0 0);
+    --color-sidebar-ring: oklch(50% 0.2 211);
 
-        /* Shadows for dark theme */
-        --shadow-soft: 0 2px 8px oklch(0% 0 0 / 0.2);
-        --shadow-medium: 0 4px 16px oklch(0% 0 0 / 0.3);
-        --shadow-strong: 0 8px 32px oklch(0% 0 0 / 0.4);
-        --shadow-glow: 0 0 32px oklch(50% 0.2 211 / 0.3);
+    /* Shadows for dark theme */
+    --shadow-soft: 0 2px 8px oklch(0% 0 0 / 0.2);
+    --shadow-medium: 0 4px 16px oklch(0% 0 0 / 0.3);
+    --shadow-strong: 0 8px 32px oklch(0% 0 0 / 0.4);
+    --shadow-glow: 0 0 32px oklch(50% 0.2 211 / 0.3);
 
-        /* Gradients for dark theme */
-        --gradient-hero: linear-gradient(135deg, oklch(50% 0.2 211), oklch(60% 0.2 211));
-        --gradient-subtle: linear-gradient(180deg, oklch(10% 0 0), oklch(8% 0 0));
-    }
+    /* Gradients for dark theme */
+    --gradient-hero: linear-gradient(135deg, oklch(50% 0.2 211), oklch(60% 0.2 211));
+    --gradient-subtle: linear-gradient(180deg, oklch(10% 0 0), oklch(8% 0 0));
+}
+
+/* Light theme styles */
+.light {
+    --color-background: oklch(98% 0 0);
+    --color-foreground: oklch(9% 0 0);
+
+    --color-card: oklch(100% 0 0);
+    --color-card-foreground: oklch(9% 0 0);
+
+    --color-popover: oklch(100% 0 0);
+    --color-popover-foreground: oklch(9% 0 0);
+
+    --color-primary: oklch(50% 0.2 211);
+    --color-primary-foreground: oklch(100% 0 0);
+    --color-primary-glow: oklch(60% 0.2 211);
+
+    --color-secondary: oklch(96% 0 0);
+    --color-secondary-foreground: oklch(9% 0 0);
+
+    --color-muted: oklch(96% 0 0);
+    --color-muted-foreground: oklch(45% 0 0);
+
+    --color-accent: oklch(96% 0 0);
+    --color-accent-foreground: oklch(9% 0 0);
+
+    --color-destructive: oklch(60% 0.15 0);
+    --color-destructive-foreground: oklch(98% 0 0);
+
+    --color-border: oklch(90% 0 0);
+    --color-input: oklch(96% 0 0);
+    --color-ring: oklch(50% 0.2 211);
+
+    --color-chat-user: oklch(50% 0.2 211);
+    --color-chat-user-foreground: oklch(100% 0 0);
+    --color-chat-ai: oklch(93% 0 0);
+    --color-chat-ai-foreground: oklch(9% 0 0);
+
+    --color-sidebar-background: oklch(98% 0 0);
+    --color-sidebar-foreground: oklch(26.1% 0.05 240);
+    --color-sidebar-primary: oklch(10% 0.06 240);
+    --color-sidebar-primary-foreground: oklch(98% 0 0);
+    --color-sidebar-accent: oklch(95.9% 0.05 240);
+    --color-sidebar-accent-foreground: oklch(10% 0.06 240);
+    --color-sidebar-border: oklch(91% 0.13 220);
+    --color-sidebar-ring: oklch(59.8% 0.91 217.2);
+
+    --shadow-soft: 0 2px 8px oklch(0% 0 0 / 0.04);
+    --shadow-medium: 0 4px 16px oklch(0% 0 0 / 0.08);
+    --shadow-strong: 0 8px 32px oklch(0% 0 0 / 0.12);
+    --shadow-glow: 0 0 32px oklch(50% 0.2 211 / 0.2);
+
+    --gradient-hero: linear-gradient(135deg, oklch(50% 0.2 211), oklch(60% 0.2 211));
+    --gradient-subtle: linear-gradient(180deg, oklch(100% 0 0), oklch(98% 0 0));
 }
 
 @layer base {
@@ -194,7 +246,7 @@
 }
 
 .markdown-content code {
-    font-family: 'Geist Mono', monospace;
+    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
     font-size: 0.875em;
 }
 

@@ -28,25 +28,24 @@ export async function GET() {
     };
   }
 
-  // Test Azure Storage
   try {
     const storageAccountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
     const storageAccountKey = process.env.AZURE_STORAGE_ACCOUNT_KEY;
 
     if (!storageAccountName || !storageAccountKey) {
-      throw new Error('Azure Storage credentials not configured');
+      throw new Error('Storage credentials not configured');
     }
 
     // Basic configuration check
     healthChecks.azure_storage = {
       status: 'configured',
-      message: 'Azure Storage credentials are configured',
+      message: 'Storage credentials are configured',
       timestamp: new Date().toISOString()
     };
   } catch (error) {
     healthChecks.azure_storage = {
       status: 'unhealthy',
-      message: error instanceof Error ? error.message : 'Azure Storage configuration failed',
+      message: error instanceof Error ? error.message : 'Storage configuration failed',
       timestamp: new Date().toISOString()
     };
   }
