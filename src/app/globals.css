@@ -1,26 +1,251 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+    /* Apple-inspired color palette */
+    --color-background: oklch(98% 0 0);
+    --color-foreground: oklch(9% 0 0);
+
+    --color-card: oklch(100% 0 0);
+    --color-card-foreground: oklch(9% 0 0);
+
+    --color-popover: oklch(100% 0 0);
+    --color-popover-foreground: oklch(9% 0 0);
+
+    /* Apple blue as primary */
+    --color-primary: oklch(50% 0.2 211);
+    --color-primary-foreground: oklch(100% 0 0);
+    --color-primary-glow: oklch(60% 0.2 211);
+
+    /* Neutral grays */
+    --color-secondary: oklch(96% 0 0);
+    --color-secondary-foreground: oklch(9% 0 0);
+
+    --color-muted: oklch(96% 0 0);
+    --color-muted-foreground: oklch(45% 0 0);
+
+    --color-accent: oklch(96% 0 0);
+    --color-accent-foreground: oklch(9% 0 0);
+
+    --color-destructive: oklch(60% 0.15 0);
+    --color-destructive-foreground: oklch(98% 0 0);
+
+    /* Subtle borders and inputs */
+    --color-border: oklch(90% 0 0);
+    --color-input: oklch(96% 0 0);
+    --color-ring: oklch(50% 0.2 211);
+
+    /* Design tokens for DocuChat */
+    --color-chat-user: oklch(50% 0.2 211);
+    --color-chat-user-foreground: oklch(100% 0 0);
+    --color-chat-ai: oklch(93% 0 0);
+    --color-chat-ai-foreground: oklch(9% 0 0);
+
+    /* Sidebar colors */
+    --color-sidebar-background: oklch(98% 0 0);
+    --color-sidebar-foreground: oklch(26.1% 0.05 240);
+    --color-sidebar-primary: oklch(10% 0.06 240);
+    --color-sidebar-primary-foreground: oklch(98% 0 0);
+    --color-sidebar-accent: oklch(95.9% 0.05 240);
+    --color-sidebar-accent-foreground: oklch(10% 0.06 240);
+    --color-sidebar-border: oklch(91% 0.13 220);
+    --color-sidebar-ring: oklch(59.8% 0.91 217.2);
+
+    /* Radius */
+    --radius: 12px;
+
+    /* Shadows */
+    --shadow-soft: 0 2px 8px oklch(0% 0 0 / 0.04);
+    --shadow-medium: 0 4px 16px oklch(0% 0 0 / 0.08);
+    --shadow-strong: 0 8px 32px oklch(0% 0 0 / 0.12);
+    --shadow-glow: 0 0 32px oklch(50% 0.2 211 / 0.2);
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, oklch(50% 0.2 211), oklch(60% 0.2 211));
+    --gradient-subtle: linear-gradient(180deg, oklch(100% 0 0), oklch(98% 0 0));
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@variant dark {
+    @theme {
+        /* Dark theme - Apple-inspired */
+        --color-background: oklch(8% 0 0);
+        --color-foreground: oklch(98% 0 0);
+
+        --color-card: oklch(10% 0 0);
+        --color-card-foreground: oklch(98% 0 0);
+
+        --color-popover: oklch(10% 0 0);
+        --color-popover-foreground: oklch(98% 0 0);
+
+        --color-primary: oklch(50% 0.2 211);
+        --color-primary-foreground: oklch(100% 0 0);
+        --color-primary-glow: oklch(60% 0.2 211);
+
+        --color-secondary: oklch(15% 0 0);
+        --color-secondary-foreground: oklch(90% 0 0);
+
+        --color-muted: oklch(15% 0 0);
+        --color-muted-foreground: oklch(60% 0 0);
+
+        --color-accent: oklch(15% 0 0);
+        --color-accent-foreground: oklch(90% 0 0);
+
+        --color-destructive: oklch(60% 0.15 0);
+        --color-destructive-foreground: oklch(98% 0 0);
+
+        --color-border: oklch(20% 0 0);
+        --color-input: oklch(15% 0 0);
+        --color-ring: oklch(50% 0.2 211);
+
+        /* Dark theme chat colors */
+        --color-chat-user: oklch(50% 0.2 211);
+        --color-chat-user-foreground: oklch(100% 0 0);
+        --color-chat-ai: oklch(15% 0 0);
+        --color-chat-ai-foreground: oklch(90% 0 0);
+
+        --color-sidebar-background: oklch(8% 0 0);
+        --color-sidebar-foreground: oklch(90% 0 0);
+        --color-sidebar-primary: oklch(50% 0.2 211);
+        --color-sidebar-primary-foreground: oklch(100% 0 0);
+        --color-sidebar-accent: oklch(15% 0 0);
+        --color-sidebar-accent-foreground: oklch(90% 0 0);
+        --color-sidebar-border: oklch(20% 0 0);
+        --color-sidebar-ring: oklch(50% 0.2 211);
+
+        /* Shadows for dark theme */
+        --shadow-soft: 0 2px 8px oklch(0% 0 0 / 0.2);
+        --shadow-medium: 0 4px 16px oklch(0% 0 0 / 0.3);
+        --shadow-strong: 0 8px 32px oklch(0% 0 0 / 0.4);
+        --shadow-glow: 0 0 32px oklch(50% 0.2 211 / 0.3);
+
+        /* Gradients for dark theme */
+        --gradient-hero: linear-gradient(135deg, oklch(50% 0.2 211), oklch(60% 0.2 211));
+        --gradient-subtle: linear-gradient(180deg, oklch(10% 0 0), oklch(8% 0 0));
+    }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@layer base {
+    * {
+        border-color: var(--color-border);
+    }
+
+    body {
+        background-color: var(--color-background);
+        color: var(--color-foreground);
+    }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Custom markdown styling for better chat experience */
+.markdown-content {
+    line-height: 1.6;
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    font-weight: 600;
+}
+
+.markdown-content h1:first-child,
+.markdown-content h2:first-child,
+.markdown-content h3:first-child,
+.markdown-content h4:first-child,
+.markdown-content h5:first-child,
+.markdown-content h6:first-child {
+    margin-top: 0;
+}
+
+.markdown-content p {
+    margin-bottom: 1em;
+}
+
+.markdown-content p:last-child {
+    margin-bottom: 0;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+    margin-bottom: 1em;
+    padding-left: 1.5em;
+}
+
+.markdown-content li {
+    margin-bottom: 0.25em;
+}
+
+.markdown-content blockquote {
+    margin: 1em 0;
+    padding-left: 1em;
+    border-left: 3px solid var(--color-border);
+    font-style: italic;
+    color: var(--color-muted-foreground);
+}
+
+.markdown-content pre {
+    margin: 1em 0;
+    padding: 1em;
+    background-color: var(--color-muted);
+    border-radius: 0.5em;
+    overflow-x: auto;
+}
+
+.markdown-content code {
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.875em;
+}
+
+.markdown-content pre code {
+    background: none;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+}
+
+.markdown-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+}
+
+.markdown-content th,
+.markdown-content td {
+    padding: 0.5em;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.markdown-content th {
+    font-weight: 600;
+    background-color: var(--color-muted);
+}
+
+.markdown-content a {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.markdown-content a:hover {
+    color: var(--color-primary-glow);
+}
+
+.markdown-content hr {
+    margin: 2em 0;
+    border: none;
+    border-top: 1px solid var(--color-border);
+}
+
+/* Syntax highlighting adjustments */
+.markdown-content .hljs {
+    background: var(--color-muted) !important;
+    color: var(--color-foreground) !important;
+}
+
+/* Smooth scrolling for anchor links */
+.markdown-content [id] {
+    scroll-margin-top: 2rem;
 }
